@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>A little birthday magic</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap" rel="stylesheet" />
+	<style>
+		:root {
+			--ink: #3b1f2b;
+			--muted: #8b6171;
+			--paper: #fff5f8;
+			--rose: #f08aa0;
+			--rose-dark: #c9426b;
+			--peach: #ffd0df;
+			--lavender: #f5c9dc;
+			--yellow: #ffc2d1;
+			--line: rgba(125, 47, 76, 0.16);
+		}
+
+		* { box-sizing: border-box; }
+		html { scroll-behavior: smooth; }
+		body {
+			margin: 0;
+			color: var(--ink);
+			background: var(--paper);
+			font-family: "DM Sans", sans-serif;
+			overflow-x: hidden;
+		}
+
+		.page-shell { position: relative; isolation: isolate; }
+		.page-shell::before {
+			content: "";
+			position: absolute;
+			inset: 0 0 auto;
+			height: 820px;
+			z-index: -1;
+			background: radial-gradient(circle at 12% 8%, #ffd4e2 0, transparent 28%), radial-gradient(circle at 92% 20%, #f5c7d9 0, transparent 30%), linear-gradient(120deg, #fff0f5 0%, #fff7fa 52%, #ffe7ef 100%);
+		}
+
+		nav {
+			width: min(1120px, calc(100% - 48px));
+			margin: auto;
+			padding: 28px 0;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.mark { font-weight: 700; letter-spacing: -.04em; font-size: 1.05rem; }
+		.mark span { color: var(--rose-dark); }
+		.nav-note { color: var(--muted); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; }
+
+		.hero {
+			min-height: 690px;
+			width: min(1120px, calc(100% - 48px));
+			margin: auto;
+			padding: 75px 0 100px;
+			display: grid;
+			grid-template-columns: 1fr .95fr;
+			gap: 72px;
+			align-items: center;
+		}
+		.eyebrow { display: flex; align-items: center; gap: 13px; color: var(--rose-dark); font-size: .78rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+		.eyebrow::before { content: ""; width: 34px; height: 2px; background: var(--rose); }
+		h1, h2 { font-family: "Playfair Display", serif; font-weight: 600; letter-spacing: -.055em; line-height: .94; }
+		h1 { font-size: clamp(4.4rem, 9vw, 8.2rem); margin: 24px 0 26px; max-width: 650px; }
+		h1 em { color: var(--rose-dark); font-style: italic; }
+		.hero-copy { max-width: 465px; color: var(--muted); line-height: 1.7; font-size: 1.04rem; }
+		.hero-actions { margin-top: 32px; display: flex; align-items: center; gap: 22px; }
+		.primary-btn, .text-btn { border: 0; font: inherit; cursor: pointer; }
+		.primary-btn { padding: 15px 22px; border-radius: 99px; background: var(--ink); color: white; font-weight: 700; box-shadow: 0 8px 18px rgba(40, 35, 41, .13); transition: transform .2s, background .2s; }
+		.primary-btn:hover { transform: translateY(-3px); background: var(--rose-dark); }
+		.text-btn { color: var(--ink); background: none; font-weight: 700; border-bottom: 1px solid var(--ink); padding: 6px 0; }
+
+		.portrait-wrap { position: relative; width: min(100%, 430px); justify-self: end; }
+		.portrait { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 220px 220px 16px 16px; background: #f2a3b9; box-shadow: 18px 22px 0 var(--peach); }
+		.portrait::before { content: ""; position: absolute; inset: 0; background: linear-gradient(155deg, rgba(255,255,255,.3), transparent 42%), radial-gradient(circle at 64% 32%, #ffe0eb 0 10%, transparent 10.4%), radial-gradient(ellipse at 55% 82%, #c65b7c 0 32%, transparent 32.5%), linear-gradient(135deg, #f7b0c5, #df7195); }
+		.portrait::after { content: "✦"; position: absolute; top: 16%; right: 11%; color: white; font-size: 2rem; transform: rotate(15deg); }
+		.sticker { position: absolute; z-index: 2; width: 82px; height: 82px; display: grid; place-items: center; border-radius: 50%; background: var(--yellow); right: -28px; top: 23%; font-family: "Playfair Display", serif; font-size: 1.8rem; transform: rotate(12deg); box-shadow: 0 6px 0 rgba(40,35,41,.1); }
+		.sticker small { display: block; font: 700 .59rem "DM Sans", sans-serif; text-transform: uppercase; letter-spacing: .08em; text-align: center; }
+		.date-tag { position: absolute; z-index: 2; bottom: 25px; left: -33px; padding: 14px 18px; background: white; font-size: .73rem; letter-spacing: .08em; text-transform: uppercase; box-shadow: 0 8px 20px rgba(40,35,41,.1); }
+		.date-tag strong { color: var(--rose-dark); font-size: 1.2rem; margin-right: 4px; }
+
+		.wishes { width: min(1120px, calc(100% - 48px)); margin: 0 auto; padding: 50px 0 100px; border-top: 1px solid var(--line); }
+		.section-kicker { color: var(--rose-dark); font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+		h2 { font-size: clamp(2.8rem, 5vw, 5rem); margin: 18px 0 42px; max-width: 620px; }
+		h2 em { color: var(--rose-dark); }
+		.wish-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+		.wish { min-height: 210px; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid var(--line); background: rgba(255,255,255,.45); transition: transform .25s, background .25s; }
+		.wish:hover { transform: translateY(-7px) rotate(-1deg); background: white; }
+		.wish:nth-child(2) { background: var(--lavender); transform: translateY(20px); }
+		.wish:nth-child(2):hover { transform: translateY(13px) rotate(1deg); }
+		.wish:nth-child(3) { background: var(--peach); }
+		.wish-icon { font-size: 1.8rem; }
+		.wish p { margin: 0; max-width: 220px; font-family: "Playfair Display", serif; font-size: 1.5rem; line-height: 1.12; }
+		.wish small { color: var(--muted); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+		.gallery-section { width: min(1120px, calc(100% - 48px)); margin: 0 auto; padding: 74px 0 100px; border-top: 1px solid var(--line); }
+		.gallery-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 34px; }
+		.gallery-heading h2 { margin: 16px 0 0; }
+		.gallery-heading p { max-width: 250px; margin: 0 0 6px; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+		.photo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+		.photo-slot { position: relative; min-width: 0; aspect-ratio: 4 / 5; overflow: hidden; background: #f7cada; border: 1px solid var(--line); }
+		.photo-slot:nth-child(2), .photo-slot:nth-child(4) { transform: translateY(18px); background: #f3b4c8; }
+		.photo-slot:nth-child(3) { background: #f9dce7; }
+		.photo-slot img { width: 100%; height: 100%; display: block; object-fit: cover; }
+		.photo-placeholder { height: 100%; display: grid; place-items: center; padding: 15px; color: var(--rose-dark); text-align: center; }
+		.photo-placeholder span { display: block; margin-bottom: 8px; font-size: 2rem; }
+		.photo-placeholder small { display: block; font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+		.photo-upload { position: absolute; inset: auto 8px 8px; z-index: 1; padding: 9px 6px; border: 0; background: rgba(255, 245, 248, .92); color: var(--ink); font: 700 .68rem "DM Sans", sans-serif; text-align: center; cursor: pointer; }
+		.photo-upload input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+		.mood-section { width: min(1120px, calc(100% - 48px)); margin: 0 auto; padding: 74px 0 105px; border-top: 1px solid var(--line); }
+		.mood-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; align-items: end; }
+		.mood-layout h2 { margin-bottom: 0; }
+		.mood-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+		.mood-option { min-height: 126px; padding: 15px; border: 1px solid var(--line); background: white; color: var(--ink); font: 500 .86rem "DM Sans", sans-serif; text-align: left; cursor: pointer; transition: transform .2s, box-shadow .2s; }
+		.mood-option:hover, .mood-option.is-selected { transform: translateY(-5px); box-shadow: 0 10px 0 var(--line); }
+		.mood-option:nth-child(1).is-selected { background: var(--yellow); }
+		.mood-option:nth-child(2).is-selected { background: var(--peach); }
+		.mood-option:nth-child(3).is-selected { background: var(--lavender); }
+		.mood-emoji { display: block; font-size: 1.8rem; margin-bottom: 18px; }
+		.mood-result { min-height: 70px; margin-top: 24px; padding: 18px 20px; background: var(--ink); color: white; font-family: "Playfair Display", serif; font-size: 1.25rem; }
+		.mood-result span { color: var(--peach); font-style: italic; }
+		.letter-section { padding: 82px 24px 96px; background: var(--peach); }
+		.letter-inner { width: min(700px, 100%); margin: auto; text-align: center; }
+		.letter-inner h2 { margin: 16px auto 28px; max-width: 520px; }
+		.letter-copy { max-height: 0; overflow: hidden; opacity: 0; transition: max-height .8s ease, opacity .5s ease; }
+		.letter-copy.is-open { max-height: 260px; opacity: 1; }
+		.letter-copy p { max-width: 570px; margin: 0 auto 28px; color: #5d4c50; line-height: 1.8; }
+		.letter-button { border: 0; border-bottom: 1px solid var(--ink); padding: 8px 0; background: none; color: var(--ink); font: 700 .86rem "DM Sans", sans-serif; cursor: pointer; }
+		.modal-backdrop { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 24px; background: rgba(59, 31, 43, .58); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+		.modal-backdrop.is-visible { opacity: 1; pointer-events: auto; }
+		.modal { position: relative; width: min(470px, 100%); padding: 46px 34px 40px; background: #fff5f8; text-align: center; box-shadow: 12px 14px 0 var(--rose); transform: translateY(20px) rotate(-1deg); transition: transform .35s ease; }
+		.modal-backdrop.is-visible .modal { transform: translateY(0) rotate(-1deg); }
+		.modal-sparkle { color: var(--rose-dark); font-size: 2rem; }
+		.modal h2 { margin: 18px auto 16px; font-size: clamp(2.6rem, 8vw, 4.2rem); }
+		.modal p { margin: 0 auto; max-width: 350px; color: var(--muted); line-height: 1.7; }
+		.modal-close { position: absolute; top: 14px; right: 16px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--peach); color: var(--ink); font-size: 1.3rem; cursor: pointer; }
+
+		.footer-note { padding: 55px 24px 70px; text-align: center; background: var(--ink); color: white; }
+		.footer-note p { margin: 0; font-family: "Playfair Display", serif; font-size: clamp(1.9rem, 4vw, 3.4rem); }
+		.footer-note span { color: var(--peach); font-style: italic; }
+		.hidden-message { max-height: 0; overflow: hidden; opacity: 0; transition: max-height .7s ease, opacity .5s ease, margin .7s; }
+		.hidden-message.is-open { max-height: 130px; opacity: 1; margin-top: 24px; }
+		.hidden-message p { color: #f8dfe0; font: 400 1rem/1.6 "DM Sans", sans-serif; max-width: 500px; margin: auto; }
+		.confetti { position: fixed; top: -20px; z-index: 5; width: 8px; height: 14px; pointer-events: none; animation: fall 2.8s linear forwards; }
+		@keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+		.reveal { animation: rise .8s both; }
+		@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+		@media (max-width: 720px) {
+			nav, .hero, .wishes { width: min(100% - 36px, 540px); }
+			.nav-note { display: none; }
+			.hero { display: flex; flex-direction: column; align-items: stretch; gap: 46px; padding: 50px 0 85px; min-height: auto; }
+			h1 { font-size: clamp(2.8rem, 13vw, 5rem); }
+			.portrait-wrap { align-self: center; width: min(84vw, 360px); margin-right: 18px; }
+			.wish-grid { grid-template-columns: 1fr; }
+			.wish, .wish:nth-child(2), .wish:nth-child(2):hover { min-height: 170px; transform: none; }
+			.wishes { padding-bottom: 75px; }
+			.mood-section { width: min(100% - 36px, 540px); padding: 62px 0 75px; }
+			.gallery-section { width: min(100% - 36px, 540px); padding: 62px 0 75px; }
+			.gallery-heading { display: block; }
+			.gallery-heading p { margin-top: 18px; }
+			.photo-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+			.photo-slot:nth-child(2), .photo-slot:nth-child(4) { transform: none; }
+			.mood-layout { display: block; }
+			.mood-layout h2 { margin-bottom: 32px; }
+			.mood-picker { grid-template-columns: 1fr; }
+			.mood-option { min-height: 84px; display: flex; align-items: center; gap: 15px; }
+			.mood-emoji { margin: 0; }
+			.modal { padding: 40px 24px 34px; }
+		}
+	</style>
+</head>
+<body>
+	<div class="page-shell">
+		<nav aria-label="Main navigation">
+			<div class="mark">for <span>you</span> ✦</div>
+			<div class="nav-note">a day worth celebrating</div>
+		</nav>
+
+		<main>
+			<section class="hero">
+				<div class="hero-content reveal">
+					<div class="eyebrow">Today is yours</div>
+					<h1>HAPPY 20TH<br /><em>BIRTHDAY,</em><br />BADATERNS!!.</h1>
+					<p class="hero-copy">Thank you for being a good friend, Through all the iyak, katawa, chismis daghan, naa japun ka, literal na unpaid therapist tika and partner sa kabuang HAHAHA kung unsay trip nako imo sad HAHAHA pero dita kaingon nga amega rata kay mangasaba man kas akoa inig ma over na me tas gahig ulo HAHAHAHA (Mama yarn?). Ik kapoy nakag paminaw sakong rant na murag wa diri wala didto labi nas among situation ni 😝 HAHAHAHA Anyways dat, always choose what makes you happy and live to the fulliest of your lifeHAHAHA oa sa fulliest basta atong negosyo dara ayg kalimti HAHAHA 🤣 kaon kay gamiton.</p>
+					<div class="hero-actions">
+						<button class="primary-btn" id="surpriseButton" type="button">Open your surprise <span aria-hidden="true">↗</span></button>
+						<a class="text-btn" href="#wishes">See your wishes</a>
+					</div>
+				</div>
+				<div class="portrait-wrap reveal" style="animation-delay: .18s">
+					<div class="sticker"><small>made for</small> you</div>
+					<div class="portrait" role="img" aria-label="A warm, abstract birthday portrait in pink and peach tones"></div>
+					<div class="date-tag"><strong>24</strong> little reasons to smile</div>
+				</div>
+			</section>
+
+			<section class="wishes" id="wishes">
+				<div class="section-kicker">A few things I hope for you</div>
+				<h2>May this year feel like a collection of <em>good news.</em></h2>
+				<div class="wish-grid">
+					<article class="wish"><span class="wish-icon" aria-hidden="true">☼</span><p>Soft mornings and brave new beginnings.</p><small>01 / sunshine</small></article>
+					<article class="wish"><span class="wish-icon" aria-hidden="true">✦</span><p>More moments that make you laugh until it hurts.</p><small>02 / joy</small></article>
+					<article class="wish"><span class="wish-icon" aria-hidden="true">♡</span><p>All the love you give, finding its way back.</p><small>03 / always</small></article>
+				</div>
+			</section>
+
+			<section class="gallery-section" id="memories" aria-labelledby="gallery-title">
+				<div class="gallery-heading">
+					<div><div class="section-kicker">Five favorite moments</div><h2 id="gallery-title">A tiny gallery of <em>you.</em></h2></div>
+					<p>Five little memories, now part of the page forever.</p>
+				</div>
+				<div class="photo-grid">
+					<div class="photo-slot"><img src="df968c64-47d4-49d7-8fdf-6b4e565a95e8.jpg" alt="Birthday memory one" /></div>
+					<div class="photo-slot"><img src="c5aa240d-1bb6-4507-b46a-eca37917940c.jpg" alt="Birthday memory two" /></div>
+					<div class="photo-slot"><img src="8e76b863-7ab5-46c5-bd39-45c286dcc2d3.jpg" alt="Birthday memory three" /></div>
+					<div class="photo-slot"><img src="6516d92a-e741-4588-b435-35c1263cd3bc.jpg" alt="Birthday memory four" /></div>
+					<div class="photo-slot"><img src="31e0502b-ae93-4a4e-b6b6-eb002cc29687%20-%20Copy.jpg" alt="Birthday memory five" /></div>
+				</div>
+			</section>
+
+			<section class="mood-section" aria-labelledby="mood-title">
+				<div class="mood-layout">
+					<div>
+						<div class="section-kicker">Choose your energy</div>
+						<h2 id="mood-title">What kind of <em>magic</em> is calling?</h2>
+					</div>
+					<div>
+						<div class="mood-picker" role="group" aria-label="Choose a birthday mood">
+							<button class="mood-option is-selected" type="button" data-message="A little sunshine follows you everywhere today."><span class="mood-emoji" aria-hidden="true">☼</span>Sunshine</button>
+							<button class="mood-option" type="button" data-message="A slow, sweet day with your favorite people sounds perfect."><span class="mood-emoji" aria-hidden="true">♡</span>Soft & sweet</button>
+							<button class="mood-option" type="button" data-message="Here’s to taking up space and making something brilliant."><span class="mood-emoji" aria-hidden="true">✦</span>Big dreams</button>
+						</div>
+						<div class="mood-result" id="moodResult" aria-live="polite"><span>Today’s forecast:</span> A little sunshine follows you everywhere today.</div>
+					</div>
+				</div>
+			</section>
+		</main>
+		<section class="letter-section" aria-labelledby="letter-title">
+			<div class="letter-inner">
+				<div class="section-kicker">A note for your new chapter</div>
+				<h2 id="letter-title">You make ordinary days feel <em>special.</em></h2>
+				<div class="letter-copy" id="letterCopy"><p>Keep your curious heart. Keep the silly laugh, the big ideas, and the way you make people feel seen. This year does not need you to be anyone else. It just needs more of the wonderful person you already are.</p></div>
+				<button class="letter-button" id="letterButton" type="button" aria-expanded="false">Read your little letter ↓</button>
+			</div>
+		</section>
+		<div class="modal-backdrop" id="birthdayModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+			<div class="modal">
+				<button class="modal-close" id="modalClose" type="button" aria-label="Close birthday surprise">×</button>
+				<div class="modal-sparkle" aria-hidden="true">✦ ♡ ✦</div>
+				<h2 id="modalTitle">A surprise for you!</h2>
+				<p>Today is your reminder that you are deeply loved, endlessly funny, and absolutely worth celebrating. Make the biggest wish you can.</p>
+			</div>
+		</div>
+		<footer class="footer-note">
+			<p>Keep being exactly <span>you.</span></p>
+			<div class="hidden-message" id="hiddenMessage"><p>You are loved more than you know. Now make a wish, close your eyes, and let this next chapter be wonderful.</p></div>
+		</footer>
+	</div>
+	<script>
+		const surpriseButton = document.querySelector('#surpriseButton');
+		const hiddenMessage = document.querySelector('#hiddenMessage');
+		const moodResult = document.querySelector('#moodResult');
+		const letterButton = document.querySelector('#letterButton');
+		const letterCopy = document.querySelector('#letterCopy');
+		const birthdayModal = document.querySelector('#birthdayModal');
+		const modalClose = document.querySelector('#modalClose');
+		const colors = ['#df7180', '#f8d66d', '#d6d3f4', '#ffd3ba', '#ffffff'];
+		document.querySelectorAll('.mood-option').forEach((option) => {
+			option.addEventListener('click', () => {
+				document.querySelectorAll('.mood-option').forEach((item) => item.classList.remove('is-selected'));
+				option.classList.add('is-selected');
+				moodResult.innerHTML = `<span>Today’s forecast:</span> ${option.dataset.message}`;
+			});
+		});
+
+		letterButton.addEventListener('click', () => {
+			const isOpen = letterCopy.classList.toggle('is-open');
+			letterButton.setAttribute('aria-expanded', String(isOpen));
+			letterButton.textContent = isOpen ? 'Close your little letter ↑' : 'Read your little letter ↓';
+		});
+
+		function celebrate() {
+			hiddenMessage.classList.add('is-open');
+			birthdayModal.classList.add('is-visible');
+			modalClose.focus();
+			surpriseButton.innerHTML = 'Make a wish <span aria-hidden="true">✦</span>';
+			surpriseButton.setAttribute('aria-expanded', 'true');
+			for (let index = 0; index < 52; index += 1) {
+				const piece = document.createElement('i');
+				piece.className = 'confetti';
+				piece.style.left = `${Math.random() * 100}vw`;
+				piece.style.background = colors[index % colors.length];
+				piece.style.animationDelay = `${Math.random() * .8}s`;
+				piece.style.transform = `rotate(${Math.random() * 180}deg)`;
+				document.body.appendChild(piece);
+				piece.addEventListener('animationend', () => piece.remove());
+			}
+		}
+
+		function closeModal() {
+			birthdayModal.classList.remove('is-visible');
+			surpriseButton.focus();
+		}
+
+		modalClose.addEventListener('click', closeModal);
+		birthdayModal.addEventListener('click', (event) => {
+			if (event.target === birthdayModal) closeModal();
+		});
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && birthdayModal.classList.contains('is-visible')) closeModal();
+		});
+
+		surpriseButton.addEventListener('click', celebrate);
+	</script>
+</body>
+</html>
